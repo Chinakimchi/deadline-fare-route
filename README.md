@@ -39,6 +39,8 @@
 
 키가 준비되면 값은 채팅으로 보내지 말고 저장소의 Secrets에 직접 등록합니다.
 
+카카오 앱은 [카카오디벨로퍼스](https://developers.kakao.com/)에서 만들고, 앱 관리의 **카카오맵 → 사용 설정 → ON**을 켭니다. **앱 → 플랫폼 키 → REST API 키**를 확인합니다. 처음 카카오맵을 활성화한 앱에만 무료 쿼터가 적용되므로 앱 정보에서 무료 쿼터 배지를 확인하세요. 키를 `KAKAO_REST_API_KEY`라는 이름으로 GitHub Actions Secret에 넣은 다음, **Actions → Verify Kakao Maps API → Run workflow**를 실행합니다. 로그에는 장소·대중교통·도보의 필요한 필드만 출력되고 키나 원본 응답 전체는 출력되지 않습니다.
+
 ## 로컬 실행
 
 Node.js 22 이상이 필요합니다. 이 저장소에서 `node --test`로 계산·중복 방지 테스트를 실행하고, `node server.js`로 화면을 엽니다. 기본 주소는 `http://localhost:3000`입니다.
