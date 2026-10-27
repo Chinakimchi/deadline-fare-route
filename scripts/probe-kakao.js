@@ -4,8 +4,10 @@ if (!apiKey) {
   process.exit(2);
 }
 
-const origin = { x: 127.11119217, y: 37.39477123 };
-const destination = { x: 127.12628814, y: 37.41993056 };
+const originQuery = '연세대학교 국제캠퍼스';
+const destinationQuery = '연세대학교 신촌캠퍼스';
+const origin = { x: 126.6732, y: 37.38165 };
+const destination = { x: 126.93894, y: 37.56434 };
 
 async function request(path, parameters) {
   const url = new URL(path, 'https://dapi.kakao.com');
@@ -23,13 +25,31 @@ function coordinates(start, end) {
 }
 
 try {
-  const place = await request('/v2/local/search/keyword.json', { query: '판교역', size: 1 });
-  const firstPlace = place.documents?.[0];
-  console.log('장소 검색:', firstPlace
-    ? JSON.stringify({ name: firstPlace.place_name, x: firstPlace.x, y: firstPlace.y })
-    : '검색 결과 없음');
+  const [originPlaces, destinationPlaces] = await Promise.all([
+    request('/v2/local/search/keyword.json', { query: originQuery, size: 1 }),
+    request('/v2/local/search/keyword.json', { query: destinationQuery, size: 1 })
+  ]);
+  const placeFields = (query, place) => ({
+    query,
+    name: place?.place_name ?? null,
+    address: place?.road_address_name || place?.address_name || null,
+    x: place?.x ?? null,
+    y: place?.y ?? null
+  });
+  console.log('장소 검색:', JSON.stringify([
+    placeFields(originQuery, originPlaces.documents?.[0]),
+    placeFields(destinationQuery, destinationPlaces.documents?.[0])
+  ]));
+  const resolvedOrigin = {
+    x: Number(originPlaces.documents?.[0]?.x ?? origin.x),
+    y: Number(originPlaces.documents?.[0]?.y ?? origin.y)
+  };
+  const resolvedDestination = {
+    x: Number(destinationPlaces.documents?.[0]?.x ?? destination.x),
+    y: Number(destinationPlaces.documents?.[0]?.y ?? destination.y)
+  };
 
-  const transit = await request('/v2/routing/publictraffic', coordinates(origin, destination));
+  const transit = await request('/v2/routing/publictraffic', coordinates(resolvedOrigin, resolvedDestination));
   const firstTransit = transit.routes?.[0];
   const routeFields = (transit.routes ?? []).map((route, index) => ({
     index,
@@ -51,7 +71,7 @@ try {
   }));
   console.log('경로별 필드:', JSON.stringify(routeFields));
 
-  const walk = await request('/v2/routing/walk', coordinates(origin, destination));
+  const walk = await request('/v2/routing/walk', coordinates(resolvedOrigin, resolvedDestination));
   console.log('도보:', JSON.stringify({ status: walk.status, seconds: walk.route?.properties?.totalTime ?? null }));
 
   if (transit.status !== 'OK' || !firstTransit?.properties?.totalTime) {

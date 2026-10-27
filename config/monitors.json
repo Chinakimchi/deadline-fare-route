@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "id": "yonsei-international-to-sinchon-20261028",
+    "origin": {
+      "name": "연세대학교 국제캠퍼스",
+      "address": "인천광역시 연수구 송도과학로 85",
+      "x": 126.6732,
+      "y": 37.38165
+    },
+    "destination": {
+      "name": "연세대학교 신촌캠퍼스",
+      "address": "서울특별시 서대문구 연세로 50",
+      "x": 126.93894,
+      "y": 37.56434
+    },
+    "deadline": "2026-10-28T00:10:00.000Z",
+    "bufferMinutes": 5
+  }
+]
