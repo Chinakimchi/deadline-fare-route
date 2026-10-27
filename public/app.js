@@ -91,7 +91,9 @@ function renderResults(data) {
     rank.textContent = index === 0 ? '최저 비용' : `대안 ${index}`;
     const fare = document.createElement('strong');
     fare.className = 'fare';
-    fare.textContent = `${number.format(route.fareWon)}원`;
+    fare.textContent = route.fareMinWon === route.fareMaxWon
+      ? `${number.format(route.fareMinWon)}원`
+      : `${number.format(route.fareMinWon)}~${number.format(route.fareMaxWon)}원`;
     top.append(rank, fare);
     const meta = document.createElement('p');
     meta.className = 'meta';

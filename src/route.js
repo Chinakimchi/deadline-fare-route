@@ -3,9 +3,13 @@ const MODES = new Set(['WALKING', 'BUS', 'SUBWAY']);
 export function normalizeRoute(route, index) {
   const properties = route?.properties ?? {};
   const durationSeconds = Number(properties.totalTime);
-  const fareWon = Number(properties.fare?.value);
+  const rawFareMin = Number(properties.fare?.value ?? properties.fare?.min ?? properties.fare?.max);
+  const rawFareMax = Number(properties.fare?.value ?? properties.fare?.max ?? properties.fare?.min);
   if (!Number.isFinite(durationSeconds) || durationSeconds <= 0 ||
-      !Number.isFinite(fareWon) || fareWon < 0) return null;
+      !Number.isFinite(rawFareMin) || rawFareMin < 0 ||
+      !Number.isFinite(rawFareMax) || rawFareMax < 0) return null;
+  const fareMinWon = Math.min(rawFareMin, rawFareMax);
+  const fareMaxWon = Math.max(rawFareMin, rawFareMax);
 
   const segments = (route.steps ?? []).map((step) => {
     const item = step?.properties ?? {};
@@ -23,7 +27,9 @@ export function normalizeRoute(route, index) {
     id: `route-${index + 1}`,
     durationSeconds,
     durationMinutes: Math.ceil(durationSeconds / 60),
-    fareWon,
+    fareWon: fareMinWon,
+    fareMinWon,
+    fareMaxWon,
     transfers: Number.isFinite(Number(properties.transfers)) ? Number(properties.transfers) : 0,
     segments
   };

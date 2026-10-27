@@ -84,6 +84,8 @@ node server.js
 
 카카오맵 공식 REST API는 대중교통 경로별 소요시간, 요금, 환승 횟수, 도보·버스·지하철 단계를 제공합니다. 실제 계정의 접근 가능 여부와 쿼터를 확인한 뒤 채택합니다.
 
+2026-10-27 실제 호출에서 장소 검색, 대중교통 15개 경로, 도보 경로를 확인했습니다. 요금은 경로에 따라 단일 금액 또는 최소~최대 범위로 제공되며, 추천 정렬에는 최소 예상 요금을 사용하고 화면에는 전체 범위를 표시합니다.
+
 - [대중교통 경로 조회 공식 문서](https://developers.kakao.com/docs/ko/kakaomap/rest-api#route-publictraffic)
 - [API 쿼터 공식 문서](https://developers.kakao.com/docs/ko/getting-started/quota)
 

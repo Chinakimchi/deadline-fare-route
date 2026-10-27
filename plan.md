@@ -20,8 +20,9 @@
 - 호출 주소: `GET https://dapi.kakao.com/v2/routing/publictraffic` (출발·도착 경도/위도)
 - 보조 주소: `GET https://dapi.kakao.com/v2/local/search/keyword.json`, `GET https://dapi.kakao.com/v2/routing/walk`
 - 확인할 값: `routes[].properties.totalTime`, `fare.value`, `transfers`, `steps[].properties.type`
-- 실제 응답 확인: 미완료 (REST API 키 필요)
+- 실제 응답 확인: 완료 (2026-10-27, GitHub Actions 실행 40491404105)
 - 확인 방법: GitHub Actions의 `Verify Kakao Maps API` 수동 실행 로그에서 시간·요금·이동 단계 확인
+- 확인 결과: 판교역 인근 표본에서 대중교통 15개 경로, 도보 경로 반환. 요금은 단일 `value` 또는 `min/max` 범위 형태이며, 버스·지하철·도보 단계가 확인됨
 - 일일 한도: 공식 문서상 첫 활성화 앱 무료 제공량 1,000건/일. 계정별 적용 상태 확인 필요
 - 호출 간격: GitHub Actions 10분 간격. 등록 경로 1개당 최대 144건/일, 최대 5개 등록 시 최대 720건/일
 - 출처 표시: 경로 데이터: 카카오맵

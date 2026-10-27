@@ -30,10 +30,13 @@ export function evaluateMonitor(monitor, data, state, now = new Date(), leadMinu
     const mode = { WALKING: '도보', BUS: '버스', SUBWAY: '지하철' }[segment.mode] ?? '이동';
     return `${mode}${segment.vehicle ? ` ${segment.vehicle}` : ''} ${segment.minutes}분`;
   }).join(' → ');
+  const fare = route.fareMinWon === route.fareMaxWon
+    ? `${route.fareMinWon.toLocaleString('ko-KR')}원`
+    : `${route.fareMinWon.toLocaleString('ko-KR')}~${route.fareMaxWon.toLocaleString('ko-KR')}원`;
   const message = [
     `⏰ ${display(deadline)}까지 ${destination}에 도착하려면`,
     `${display(route.latestDeparture)}까지 ${origin}에서 출발하세요.`,
-    `예상 교통비 ${route.fareWon.toLocaleString('ko-KR')}원 · ${route.durationMinutes}분 · 환승 ${route.transfers}회`,
+    `예상 교통비 ${fare} · ${route.durationMinutes}분 · 환승 ${route.transfers}회`,
     steps,
     '경로 데이터: 카카오맵 · 소요시간은 예상치입니다.'
   ].filter(Boolean).join('\n');
@@ -70,7 +73,11 @@ async function main() {
       const candidate = evaluateMonitor(monitor, data, state, now);
       if (!candidate) continue;
       await sendTelegram(candidate.message);
-      state.sent[candidate.dedupKey] = { sentAt: now.toISOString(), fareWon: candidate.route.fareWon };
+      state.sent[candidate.dedupKey] = {
+        sentAt: now.toISOString(),
+        fareMinWon: candidate.route.fareMinWon,
+        fareMaxWon: candidate.route.fareMaxWon
+      };
       sent++;
     } catch (error) {
       errors.push(`${monitor?.id ?? '알림'}: ${error.message}`);

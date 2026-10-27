@@ -16,7 +16,7 @@ test('공식 API 응답을 받아 웹 경로 응답으로 연결한다', async (
       }
       return new Response(JSON.stringify({
         status: 'OK', routes: [
-          { properties: { totalTime: 2400, fare: { value: 1500 }, transfers: 1 }, steps: [{ properties: { type: 'BUS', time: 1200, vehicles: [{ name: '100' }] } }] },
+          { properties: { totalTime: 2400, fare: { min: 1500, max: 1650 }, transfers: 1 }, steps: [{ properties: { type: 'BUS', time: 1200, vehicles: [{ name: '100' }] } }] },
           { properties: { totalTime: 1800, fare: { value: 2500 }, transfers: 0 }, steps: [] }
         ]
       }), { status: 200 });
@@ -41,6 +41,7 @@ test('공식 API 응답을 받아 웹 경로 응답으로 연결한다', async (
     assert.equal(response.status, 200);
     const result = await response.json();
     assert.deepEqual(result.routes.map((route) => route.fareWon), [1500, 2500]);
+    assert.equal(result.routes[0].fareMaxWon, 1650);
     assert.equal(upstream.length, 2);
     assert.ok(upstream.every((call) => call.auth === 'KakaoAK test-only-key'));
   } finally {
