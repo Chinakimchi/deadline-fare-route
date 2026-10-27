@@ -18,3 +18,15 @@ jobs:
         run: node scripts/probe-kakao.js
         env:
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+      - name: Check Telegram bot connection
+        run: node scripts/probe-telegram.js
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID_OUTPUT: ${{ runner.temp }}/telegram-chat-id.txt
+      - name: Keep chat ID briefly for local secret registration
+        uses: actions/upload-artifact@v4
+        with:
+          name: telegram-chat-id
+          path: ${{ runner.temp }}/telegram-chat-id.txt
+          retention-days: 1
+          if-no-files-found: error
