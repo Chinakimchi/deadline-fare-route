@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>시간 맞춰 가장 저렴하게</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <span class="eyebrow">도착 시각 중심 경로 찾기</span>
+      <h1>시간에 맞춰,<br><em>가장 저렴하게.</em></h1>
+      <p>언제까지 어디에 가야 하는지 알려주세요. 가능한 대중교통 경로를 예상 비용순으로 보여드립니다.</p>
+    </header>
+
+    <section class="panel" aria-labelledby="search-title">
+      <div class="section-head"><span>01 / 검색</span><h2 id="search-title">이동 조건</h2></div>
+      <form id="route-form">
+        <div class="places">
+          <div class="field place-field">
+            <label for="origin">출발지</label>
+            <input id="origin" autocomplete="off" placeholder="장소 이름 검색" required>
+            <div id="origin-suggestions" class="suggestions" role="listbox"></div>
+          </div>
+          <div class="field place-field">
+            <label for="destination">목적지</label>
+            <input id="destination" autocomplete="off" placeholder="도착할 장소 검색" required>
+            <div id="destination-suggestions" class="suggestions" role="listbox"></div>
+          </div>
+        </div>
+        <div class="options">
+          <div class="field">
+            <label for="deadline">도착 제한 시각</label>
+            <input id="deadline" type="datetime-local" required>
+          </div>
+          <div class="field">
+            <label for="buffer">도착 여유시간</label>
+            <select id="buffer">
+              <option value="0">없음</option>
+              <option value="5" selected>5분</option>
+              <option value="10">10분</option>
+              <option value="15">15분</option>
+            </select>
+          </div>
+        </div>
+        <button id="submit" class="primary" type="submit">가능한 경로 찾기 <span aria-hidden="true">↗</span></button>
+      </form>
+      <p id="message" class="message" role="status"></p>
+    </section>
+
+    <section id="results" class="results" aria-live="polite" hidden>
+      <div class="section-head"><span>02 / 결과</span><h2>비용순 추천</h2></div>
+      <p class="hint">현재 조회한 예상 시간·요금으로 계산했습니다. 운행 상황에 따라 달라질 수 있습니다.</p>
+      <div id="route-list"></div>
+      <div class="result-actions">
+        <a id="map-link" target="_blank" rel="noopener noreferrer" hidden>지도에서 상세 경로 보기 ↗</a>
+        <button id="download-monitor" type="button" hidden>출발 알림 설정 파일 받기</button>
+      </div>
+      <p id="monitor-help" class="hint" hidden>받은 항목을 저장소의 <code>config/monitors.json</code>에 추가하면 10분마다 확인합니다. 텔레그램 연결은 별도로 설정해야 합니다.</p>
+    </section>
+
+    <footer>경로 데이터: 카카오맵 공식 API · 이 서비스는 원본 지도 서비스와 별개입니다.</footer>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
